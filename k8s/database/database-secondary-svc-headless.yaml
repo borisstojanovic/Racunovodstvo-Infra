@@ -9,6 +9,6 @@ spec:
   clusterIP: None
   ports:
     - name: database-sec
-      port: 3307
+      port: 3306
   selector:
     app: database-secondary

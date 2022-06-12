@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: database-secondary
+  namespace: racunovodstvo-dev
+  labels:
+    app: database-secondary
+spec:
+  replicas: 2
+  podManagementPolicy: OrderedReady
+  selector:
+    matchLabels:
+      app: database-secondary
+  serviceName: database-secondary-headless
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: database-secondary
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: "app"
+                      operator: In
+                      values:
+                        - database-secondary
+                namespaces:
+                  - "racunovodstvo-dev"
+                topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: database-secondary
+          image: docker.io/bitnami/mysql:latest
+          imagePullPolicy: Always
+          env:
+            - name: MYSQL_REPLICATION_MODE
+              value: slave
+            - name: MYSQL_MASTER_HOST
+              value: database-primary
+            - name: MYSQL_MASTER_PORT_NUMBER
+              value: "3306"
+            - name: MYSQL_REPLICATION_USER
+              value: repl_user
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-root-password
+            - name: MYSQL_MASTER_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-root-password
+            - name: MYSQL_REPLICATION_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-replication-password
+          ports:
+            - name: database-sec
+              containerPort: 3306
+          volumeMounts:
+            - name: data-1
+              mountPath: /bitnami/mysql
+  volumeClaimTemplates:
+    - metadata:
+        name: data-1
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: "8Gi"
