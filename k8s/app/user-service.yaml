@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  namespace: racunovodstvo-dev
+  labels:
+    app: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - image: ghcr.io/raf-si-2021/racunovodstvo-user:latest
+          name: racunovodstvo-user-service
+          imagePullPolicy: Always
+          resources: 
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          ports:
+            - name: user-service
+              containerPort: 8082
+          env:
+            - name: "SPRING_PROFILES_ACTIVE"
+              value: "prod"
+            - name: "MYSQL_MASTER_HOST"
+              value: "jdbc:mysql://database-primary-0.database-primary-headless.racunovodstvo-dev:3306/user?serverTimezone=UTC"
+            - name: "MYSQL_SLAVE_HOST"
+              value: "jdbc:mysql://database-secondary-0.database-secondary-headless.racunovodstvo-dev:3306/user?serverTimezone=UTC"
+            - name: "MYSQL_MASTER_ROOT_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-root-password
+            - name: "MYSQL_SLAVE_ROOT_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-root-password
+            - name: "REGISTRY_HOST"
+              value: "eureka"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: racunovodstvo-dev
+  labels:
+    app: user-service
+spec:
+  selector:
+    app: user-service
+  ports:
+    - port: 8082
+      protocol: TCP
+      targetPort: user-service
