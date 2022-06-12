@@ -1,0 +1,9 @@
+resources:
+- database/database-init-scripts-cm.yaml
+- database/database-statefulset.yaml
+- database/database-secondary-statefulset.yaml
+- database/database-svc.yaml
+- database/database-svc-headless.yaml
+- database/database-secondary-svc.yaml
+- database/database-secondary-svc-headless.yaml
+- database/mysql-secret.yaml
