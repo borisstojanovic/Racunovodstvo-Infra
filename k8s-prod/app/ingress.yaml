@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: http-internal
-  namespace: racunovodstvo-dev
+  namespace: racunovodstvo-prod
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
 
@@ -45,7 +45,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: gui-http-internal
-  namespace: racunovodstvo-dev
+  namespace: racunovodstvo-prod
 
 spec:
   ingressClassName: nginx

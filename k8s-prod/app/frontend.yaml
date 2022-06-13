@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: racunovodstvo-dev
+  namespace: racunovodstvo-prod
   labels:
     app: frontend
 spec:
@@ -27,7 +27,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: frontend
-  namespace: racunovodstvo-dev
+  namespace: racunovodstvo-prod
 spec:
   type: NodePort
   selector:

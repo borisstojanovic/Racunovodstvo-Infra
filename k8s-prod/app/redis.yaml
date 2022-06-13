@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: racunovodstvo-dev
+  namespace: racunovodstvo-prod
   labels:
     app: redis
   name: redis
@@ -36,7 +36,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: racunovodstvo-dev
+  namespace: racunovodstvo-prod
   labels:
     app: redis
   name: redis
@@ -51,7 +51,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  namespace: racunovodstvo-dev
+  namespace: racunovodstvo-prod
   labels:
     app: redis-dbdata
   name: redis-dbdata
