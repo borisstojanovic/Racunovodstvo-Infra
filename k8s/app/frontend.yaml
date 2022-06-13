@@ -16,9 +16,9 @@ spec:
         app: frontend
     spec:
       containers:
-        - image: test
+        - image: ghcr.io/raf-si-2021/racunovodstvo-front:k8s
           name: racunovodstvo-frontend
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - name: frontend
               containerPort: 80

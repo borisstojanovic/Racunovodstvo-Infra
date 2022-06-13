@@ -17,9 +17,9 @@ spec:
     spec:
       serviceAccount: discovery-client
       containers:
-        - image: nabavka-test
+        - image: ghcr.io/raf-si-2021/racunovodstvo-nabavka:latest
           name: nabavka
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - name: nabavka
               containerPort: 8084

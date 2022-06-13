@@ -17,9 +17,9 @@ spec:
     spec:
       serviceAccount: discovery-client
       containers:
-        - image: preduzece-test
+        - image: ghcr.io/raf-si-2021/racunovodstvo-preduzece:latest
           name: racunovodstvo-preduzece-service
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - name: preduzece
               containerPort: 8083

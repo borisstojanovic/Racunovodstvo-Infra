@@ -17,7 +17,7 @@ spec:
     spec:
       serviceAccount: discovery-client
       containers:
-        - image: user-test
+        - image: ghcr.io/raf-si-2021/racunovodstvo-user:latest
           name: racunovodstvo-user-service
           imagePullPolicy: IfNotPresent
           ports:
