@@ -1,4 +1,5 @@
 resources:
+- namespace.yaml
 - database/database-init-scripts-cm.yaml
 - database/database-statefulset.yaml
 - database/database-secondary-statefulset.yaml
@@ -7,3 +8,10 @@ resources:
 - database/database-secondary-svc.yaml
 - database/database-secondary-svc-headless.yaml
 - database/mysql-secret.yaml
+- app/eureka.yaml
+- app/frontend.yaml
+- app/knjizenje-service.yaml
+- app/nabavka-service.yaml
+- app/preduzece-service.yaml
+- app/user-service.yaml
+- app/ingress.yaml

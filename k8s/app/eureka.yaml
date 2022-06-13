@@ -19,10 +19,6 @@ spec:
         - image: ghcr.io/raf-si-2021/racunovodstvo-eureka:latest
           name: racunovodstvo-eureka
           imagePullPolicy: Always
-          resources: 
-            limits:
-              cpu: "1"
-              memory: 1Gi
           ports:
             - name: eureka
               containerPort: 8761

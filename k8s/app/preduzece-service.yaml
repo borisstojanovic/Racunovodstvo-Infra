@@ -19,31 +19,29 @@ spec:
         - image: ghcr.io/raf-si-2021/racunovodstvo-preduzece:latest
           name: racunovodstvo-preduzece-service
           imagePullPolicy: Always
-          resources: 
-            limits:
-              cpu: "1"
-              memory: 1Gi
           ports:
-            - name: preduzece-service
+            - name: preduzece
               containerPort: 8083
           env:
-            - name: "SPRING_PROFILES_ACTIVE"
+            - name: SPRING_PROFILES_ACTIVE
               value: "prod"
-            - name: "MYSQL_MASTER_HOST"
+            - name: MYSQL_MASTER_HOST
               value: "jdbc:mysql://database-primary-0.database-primary-headless.racunovodstvo-dev:3306/preduzece?serverTimezone=UTC"
-            - name: "MYSQL_SLAVE_HOST"
+            - name: MYSQL_SLAVE_HOST
               value: "jdbc:mysql://database-secondary-0.database-secondary-headless.racunovodstvo-dev:3306/preduzece?serverTimezone=UTC"
-            - name: "MYSQL_MASTER_ROOT_PASSWORD"
+            - name: EUREKA_INSTANCE_PREFERIPADDRESS
+              value: "true"
+            - name: MYSQL_MASTER_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: mysql-secret
                   key: mysql-root-password
-            - name: "MYSQL_SLAVE_ROOT_PASSWORD"
+            - name: MYSQL_SLAVE_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: mysql-secret
                   key: mysql-root-password
-            - name: "REGISTRY_HOST"
+            - name: REGISTRY_HOST
               value: "eureka"
 ---
 apiVersion: v1
@@ -54,9 +52,10 @@ metadata:
   labels:
     app: preduzece-service
 spec:
+  type: ClusterIP
   selector:
     app: preduzece-service
   ports:
     - port: 8083
       protocol: TCP
-      targetPort: preduzece-service
+      targetPort: preduzece
