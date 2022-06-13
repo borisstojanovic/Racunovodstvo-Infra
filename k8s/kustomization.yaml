@@ -15,3 +15,4 @@ resources:
 - app/preduzece-service.yaml
 - app/user-service.yaml
 - app/ingress.yaml
+- app/redis.yaml
