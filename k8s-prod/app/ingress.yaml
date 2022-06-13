@@ -1,0 +1,62 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: http-internal
+  namespace: racunovodstvo-prod
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: chrysus.raf
+      http:
+        paths:
+          - path: /nabavka-service(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: nabavka
+                port:
+                  number: 8084
+          - path: /preduzece-service(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: preduzece
+                port:
+                  number: 8083
+          - path: /knjizenje-service(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: knjizenje
+                port:
+                  number: 8081
+          - path: /user-service(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: user
+                port:
+                  number: 8082
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gui-http-internal
+  namespace: racunovodstvo-prod
+
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: chrysus.raf
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 4200

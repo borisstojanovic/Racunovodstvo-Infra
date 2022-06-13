@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: knjizenje
+  namespace: racunovodstvo-dev
+  labels:
+    app: knjizenje
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: knjizenje
+  template:
+    metadata:
+      labels:
+        app: knjizenje
+    spec:
+      serviceAccount: discovery-client
+      containers:
+        - image: ghcr.io/raf-si-2021/racunovodstvo-knjizenje:latest
+          name: racunovodstvo-knjizenje-service
+          imagePullPolicy: Always
+          ports:
+            - name: knjizenje
+              containerPort: 8081
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: MYSQL_MASTER_HOST
+              value: "jdbc:mysql://database-primary-0.database-primary-headless.racunovodstvo-dev:3306/knjizenje?serverTimezone=UTC"
+            - name: MYSQL_SLAVE_HOST
+              value: "jdbc:mysql://database-secondary-0.database-secondary-headless.racunovodstvo-dev:3306/knjizenje?serverTimezone=UTC"
+            - name: MYSQL_MASTER_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-root-password
+            - name: MYSQL_SLAVE_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-root-password
+            - name: EUREKA_CLIENT_ENABLED
+              value: "false"
+            - name: SPRING_CLOUD_KUBERNETES_ENABLED
+              value: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: knjizenje
+  namespace: racunovodstvo-dev
+  labels:
+    app: knjizenje
+spec:
+  type: ClusterIP
+  selector:
+    app: knjizenje
+  ports:
+    - port: 8081
+      protocol: TCP
+      targetPort: knjizenje
