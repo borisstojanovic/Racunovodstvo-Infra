@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: racunovodstvo-dev
+  labels:
+    app: redis
+  name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - image: redis:6.2.5-alpine
+          name: redis
+          ports:
+            - name: redis
+              containerPort: 6379
+          volumeMounts:
+            - mountPath: /data
+              name: redis-dbdata
+      hostname: redis
+      restartPolicy: Always
+      volumes:
+        - name: redis-dbdata
+          persistentVolumeClaim:
+            claimName: redis-dbdata
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: racunovodstvo-dev
+  labels:
+    app: redis
+  name: redis
+spec:
+  ports:
+    - name: redis
+      port: 6379
+      targetPort: 6379
+  selector:
+    app: redis
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: racunovodstvo-dev
+  labels:
+    app: redis-dbdata
+  name: redis-dbdata
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
