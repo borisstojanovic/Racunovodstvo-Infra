@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: racunovodstvo-prod
+  labels:
+    app.kubernetes.io/name: racunovodstvo-prod
+    app.kubernetes.io/instance: racunovodstvo-prod

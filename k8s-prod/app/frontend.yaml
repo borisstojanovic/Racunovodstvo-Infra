@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: racunovodstvo-prod
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - image: ghcr.io/raf-si-2021/racunovodstvo-front:k8s
+          name: racunovodstvo-frontend
+          imagePullPolicy: Always
+          ports:
+            - name: frontend
+              containerPort: 80
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: frontend
+  namespace: racunovodstvo-prod
+spec:
+  type: NodePort
+  selector:
+    app: frontend
+  ports:
+    - name: frontend
+      port: 4200
+      targetPort: 80
+      protocol: TCP
