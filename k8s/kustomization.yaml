@@ -8,7 +8,7 @@ resources:
 - database/database-secondary-svc.yaml
 - database/database-secondary-svc-headless.yaml
 - database/mysql-secret.yaml
-- app/eureka.yaml
+- app/kubernetes-service-discovery.yaml
 - app/frontend.yaml
 - app/knjizenje-service.yaml
 - app/nabavka-service.yaml

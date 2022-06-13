@@ -1,24 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nabavka-service
+  name: nabavka
   namespace: racunovodstvo-dev
   labels:
-    app: nabavka-service
+    app: nabavka
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nabavka-service
+      app: nabavka
   template:
     metadata:
       labels:
-        app: nabavka-service
+        app: nabavka
     spec:
+      serviceAccount: discovery-client
       containers:
-        - image: ghcr.io/raf-si-2021/racunovodstvo-nabavka:latest
-          name: nabavka-service
-          imagePullPolicy: Always
+        - image: nabavka-test
+          name: nabavka
+          imagePullPolicy: IfNotPresent
           ports:
             - name: nabavka
               containerPort: 8084
@@ -29,8 +30,6 @@ spec:
               value: "jdbc:mysql://database-primary-0.database-primary-headless.racunovodstvo-dev:3306/nabavka?serverTimezone=UTC"
             - name: MYSQL_SLAVE_HOST
               value: "jdbc:mysql://database-secondary-0.database-secondary-headless.racunovodstvo-dev:3306/nabavka?serverTimezone=UTC"
-            - name: EUREKA_INSTANCE_PREFERIPADDRESS
-              value: "true"
             - name: MYSQL_MASTER_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -41,20 +40,22 @@ spec:
                 secretKeyRef:
                   name: mysql-secret
                   key: mysql-root-password
-            - name: REGISTRY_HOST
-              value: "eureka"
+            - name: EUREKA_CLIENT_ENABLED
+              value: "false"
+            - name: SPRING_CLOUD_KUBERNETES_ENABLED
+              value: "true"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: nabavka-service
+  name: nabavka
   namespace: racunovodstvo-dev
   labels:
-    app: nabavka-service
+    app: nabavka
 spec:
   type: ClusterIP
   selector:
-    app: nabavka-service
+    app: nabavka
   ports:
     - port: 8084
       protocol: TCP

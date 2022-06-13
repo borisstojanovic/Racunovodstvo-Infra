@@ -1,24 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-service
+  name: user
   namespace: racunovodstvo-dev
   labels:
-    app: user-service
+    app: user
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: user-service
+      app: user
   template:
     metadata:
       labels:
-        app: user-service
+        app: user
     spec:
+      serviceAccount: discovery-client
       containers:
-        - image: ghcr.io/raf-si-2021/racunovodstvo-user:latest
+        - image: user-test
           name: racunovodstvo-user-service
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
             - name: user
               containerPort: 8082
@@ -29,8 +30,6 @@ spec:
               value: "jdbc:mysql://database-primary-0.database-primary-headless.racunovodstvo-dev:3306/user?serverTimezone=UTC"
             - name: MYSQL_SLAVE_HOST
               value: "jdbc:mysql://database-secondary-0.database-secondary-headless.racunovodstvo-dev:3306/user?serverTimezone=UTC"
-            - name: EUREKA_INSTANCE_PREFERIPADDRESS
-              value: "true"
             - name: MYSQL_MASTER_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -41,20 +40,22 @@ spec:
                 secretKeyRef:
                   name: mysql-secret
                   key: mysql-root-password
-            - name: REGISTRY_HOST
-              value: "eureka"
+            - name: EUREKA_CLIENT_ENABLED
+              value: "false"
+            - name: SPRING_CLOUD_KUBERNETES_ENABLED
+              value: "true"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: user-service
+  name: user
   namespace: racunovodstvo-dev
   labels:
-    app: user-service
+    app: user
 spec:
   type: ClusterIP
   selector:
-    app: user-service
+    app: user
   ports:
     - port: 8082
       protocol: TCP
