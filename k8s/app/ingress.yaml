@@ -11,13 +11,6 @@ spec:
     - host: racunovodstvo.k8s.elab.rs
       http:
         paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: frontend
-                port:
-                  number: 80
           - path: /nabavka-service(/|$)(.*)
             pathType: Prefix
             backend:
@@ -46,7 +39,23 @@ spec:
                 name: user
                 port:
                   number: 8082
-  tls:
-    - hosts:
-        - racunovodstvo.k8s.elab.rs
-      secretName: racunovodstvo-cert
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: racunovodstvo-ingress-gui
+  namespace: racunovodstvo-dev
+
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: racunovodsto.k8s.elab.rs
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80

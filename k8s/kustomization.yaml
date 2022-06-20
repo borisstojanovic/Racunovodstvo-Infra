@@ -16,4 +16,4 @@ resources:
 - app/user-service.yaml
 - app/ingress.yaml
 - app/redis.yaml
-- app/racunovodstvo-cert-secret.yaml
+#- app/racunovodstvo-cert-secret.yaml
