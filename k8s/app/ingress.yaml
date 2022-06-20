@@ -1,17 +1,23 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: http-internal
+  name: racunovodstvo-ingress
   namespace: racunovodstvo-dev
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
-
 spec:
   ingressClassName: nginx
   rules:
-    - host: chrysus.raf
+    - host: racunovodstvo.k8s.elab.rs
       http:
         paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
           - path: /nabavka-service(/|$)(.*)
             pathType: Prefix
             backend:
@@ -40,23 +46,7 @@ spec:
                 name: user
                 port:
                   number: 8082
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: gui-http-internal
-  namespace: racunovodstvo-dev
-
-spec:
-  ingressClassName: nginx
-  rules:
-    - host: chrysus.raf
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: frontend
-                port:
-                  number: 4200
+  tls:
+    - hosts:
+        - racunovodstvo.k8s.elab.rs
+      secretName: racunovodstvo-cert
