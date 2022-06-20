@@ -17,7 +17,7 @@ spec:
     spec:
       serviceAccount: discovery-client
       containers:
-        - image: ghcr.io/raf-si-2021/racunovodstvo-nabavka:latest
+        - image: ghcr.io/raf-si-2021/racunovodstvo-nabavka:dev
           name: nabavka
           imagePullPolicy: Always
           ports:
@@ -28,8 +28,10 @@ spec:
               value: "prod"
             - name: MYSQL_MASTER_HOST
               value: "jdbc:mysql://database-primary-0.database-primary-headless.racunovodstvo-dev:3306/nabavka?serverTimezone=UTC"
-            - name: MYSQL_SLAVE_HOST
+            - name: MYSQL_SLAVE0_HOST
               value: "jdbc:mysql://database-secondary-0.database-secondary-headless.racunovodstvo-dev:3306/nabavka?serverTimezone=UTC"
+            - name: MYSQL_SLAVE1_HOST
+              value: "jdbc:mysql://database-secondary-1.database-secondary-headless.racunovodstvo-dev:3306/nabavka?serverTimezone=UTC"
             - name: MYSQL_MASTER_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
