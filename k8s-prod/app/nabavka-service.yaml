@@ -28,8 +28,10 @@ spec:
               value: "prod"
             - name: MYSQL_MASTER_HOST
               value: "jdbc:mysql://database-primary-0.database-primary-headless.racunovodstvo-prod:3306/nabavka?serverTimezone=UTC"
-            - name: MYSQL_SLAVE_HOST
+            - name: MYSQL_SLAVE0_HOST
               value: "jdbc:mysql://database-secondary-0.database-secondary-headless.racunovodstvo-prod:3306/nabavka?serverTimezone=UTC"
+            - name: MYSQL_SLAVE1_HOST
+              value: "jdbc:mysql://database-secondary-1.database-secondary-headless.racunovodstvo-prod:3306/nabavka?serverTimezone=UTC"
             - name: MYSQL_MASTER_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
