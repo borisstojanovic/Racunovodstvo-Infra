@@ -20,20 +20,26 @@ spec:
           name: racunovodstvo-frontend
           imagePullPolicy: Always
           ports:
-            - name: frontend
-              containerPort: 80
+            - containerPort: 80
+              name: frontend
 ---
 kind: Service
 apiVersion: v1
 metadata:
   name: frontend
   namespace: racunovodstvo-dev
+  labels:
+    app: frontend
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: frontend
   ports:
-    - name: frontend
-      port: 4200
-      targetPort: 80
+    - name: frontend-http
+      port: 80
+      targetPort: frontend
       protocol: TCP
+    #- name: frontend-https
+    #  port: 443
+    #  targetPort: frontend
+    #  protocol: TCP
