@@ -49,7 +49,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: racunovodsto.k8s.elab.rs
+    - host: racunovodstvo.k8s.elab.rs
       http:
         paths:
           - path: /
