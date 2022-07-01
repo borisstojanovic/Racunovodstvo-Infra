@@ -37,9 +37,5 @@ spec:
   ports:
     - name: frontend-http
       port: 80
-      targetPort: frontend
+      targetPort: 80
       protocol: TCP
-    #- name: frontend-https
-    #  port: 443
-    #  targetPort: frontend
-    #  protocol: TCP
